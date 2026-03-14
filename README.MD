@@ -1,4 +1,4 @@
-### Custom Recovery Tree for the CMF Phone 1 (Tetris)
+### Custom Recovery Tree for the Nothing Phone (3a) Lite (galaxian)
 #### The Linux Kernel binary and it's accompanying modules are provided by [Nothing Technology Limited](https://github.com/NothingOSS) under the GNU Public License
 ❤ Credits to [KSN](https://github.com/KSN2redawew) for the Recovery Tree.
 
