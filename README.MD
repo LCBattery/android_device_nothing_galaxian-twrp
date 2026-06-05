@@ -4,7 +4,7 @@
 
 ❤ Big thanks to [LORD | CRAZY_JOKER67](https://github.com/Andreyka445)
 
-The Nothing Phone (3a) Lite (codenamed _"galaxian"_) is a mid-range smartphone from Nothing released in early 2025.
+The Nothing Phone (3a) Lite (codenamed _"Galaxian"_) is a mid-range smartphone from Nothing released in late 2025.
 
 ## Device specifications
 
@@ -17,7 +17,7 @@ Memory  | 8 GB RAM
 Shipped Android Version | 15 (Device tree for A16)
 Storage | 128 / 256 GB
 Battery | 5000 mAh
-Display | 1084 x 2392 pixels, 6.77 inches, 60/120 hz
+Display | 1080 x 2392 pixels, 6.77 inches, 60/120 hz
 
 ![Nothing Phone (3a) Lite](https://4pda.to/forum/dl/post/34278358/Nothing_%283a%29_Lite_%2804%29.jpg)
 

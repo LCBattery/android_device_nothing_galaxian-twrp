@@ -1,4 +1,4 @@
-DEVICE_PATH := device/nothing/galaxian
+DEVICE_PATH := device/nothing/Galaxian
 
 # API
 PRODUCT_SHIPPING_API_LEVEL := 32

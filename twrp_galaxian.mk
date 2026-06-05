@@ -1,6 +1,6 @@
 # Device identifier
-PRODUCT_DEVICE := galaxian
-PRODUCT_NAME := twrp_galaxian
+PRODUCT_DEVICE := Galaxian
+PRODUCT_NAME := twrp_Galaxian
 PRODUCT_BRAND := Nothing
 PRODUCT_MODEL := A001T
 PRODUCT_MANUFACTURER := Nothing

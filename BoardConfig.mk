@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-DEVICE_PATH := device/nothing/galaxian
-KERNEL_PATH := device/nothing/galaxian/prebuilt
+DEVICE_PATH := device/nothing/Galaxian
+KERNEL_PATH := device/nothing/Galaxian/prebuilt
 
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
@@ -27,11 +27,11 @@ AB_OTA_PARTITIONS += \
 
 # Architecture
 TARGET_ARCH := arm64
-TARGET_ARCH_VARIANT := armv8-a
+TARGET_ARCH_VARIANT := armv8-2a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
 TARGET_CPU_VARIANT := generic
-TARGET_CPU_VARIANT_RUNTIME := cortex-a55
+TARGET_CPU_VARIANT_RUNTIME := cortex-a76
 
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv7-a-neon
@@ -44,11 +44,11 @@ TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a55
 OVERRIDE_TARGET_FLATTEN_APEX := true
 
 # Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := galaxian
+TARGET_BOOTLOADER_BOARD_NAME := Galaxian
 TARGET_NO_BOOTLOADER := true
 
 # Resolution
-TARGET_SCREEN_HEIGHT := 2412
+TARGET_SCREEN_HEIGHT := 2392
 TARGET_SCREEN_WIDTH := 1080
 
 # Display
@@ -66,7 +66,7 @@ BOARD_BOOT_HEADER_VERSION := 4
 BOARD_INIT_BOOT_HEADER_VERSION := 4
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 BOARD_KERNEL_SEPARATED_DTBO := true
-BOARD_KERNEL_IMAGE_NAME := Image.gz
+BOARD_KERNEL_IMAGE_NAME := Image.lz4
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 
 # MKBOOTIMG
@@ -89,31 +89,37 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 
 TARGET_NO_KERNEL_OVERRIDE := true
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.lz4
 BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
 BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtb
 
-# Load vendor_dlkm modules
-BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules/modules.load))
-BOARD_VENDOR_KERNEL_MODULES := $(sort $(addprefix $(KERNEL_PATH)/modules/vendor_dlkm/, \
-    $(notdir $(BOARD_VENDOR_KERNEL_MODULES_LOAD))))
 
-# Load vendor_boot modules
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules/modules.load.vendor_boot))
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(sort $(addprefix $(KERNEL_PATH)/modules/vendor_boot/, \
-    $(notdir $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD))))
+# Kernel modules
+BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules.load.system))
+BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules.load.vendor))
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules.load.ramdisk))
+BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules.load.ramdisk_recovery))
+ALL_VENDOR_RAMDISK_MODULES := $(sort $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD) $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD))
 
-# Load recovery modules (also from vendor_boot)
-BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules/modules.load.recovery))
-BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES := $(addprefix $(KERNEL_PATH)/modules/vendor_boot/, \
-    $(notdir $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD)))
+BOARD_SYSTEM_KERNEL_MODULE_DIR := $(KERNEL_PATH)/system
+BOARD_VENDOR_KERNEL_MODULE_DIR := $(KERNEL_PATH)/vendor
 
-# Append recovery modules if they're not already in vendor_boot
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES += $(filter-out $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES), \
-    $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES))
+BOARD_SYSTEM_KERNEL_MODULES := $(addprefix $(BOARD_SYSTEM_KERNEL_MODULE_DIR)/,$(BOARD_SYSTEM_KERNEL_MODULES_LOAD))
+BOARD_VENDOR_KERNEL_MODULES := $(addprefix $(BOARD_VENDOR_KERNEL_MODULE_DIR)/,$(BOARD_VENDOR_KERNEL_MODULES_LOAD))
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(addprefix $(BOARD_VENDOR_KERNEL_MODULE_DIR)/,$(ALL_VENDOR_RAMDISK_MODULES))
+
+BOARD_VENDOR_KERNEL_MODULES += \
+    $(KERNEL_PATH)/vendor/cmdq-test.ko \
+    $(KERNEL_PATH)/vendor/emi-fake-eng.ko \
+    $(KERNEL_PATH)/vendor/eph861.ko \
+    $(KERNEL_PATH)/vendor/fmradio_drv_connac2x.ko \
+    $(KERNEL_PATH)/vendor/ft3683g.ko \
+    $(KERNEL_PATH)/vendor/gps_pwr.ko \
+    $(KERNEL_PATH)/vendor/gps_scp.ko \
+    $(KERNEL_PATH)/vendor/tui-common.ko
 
 # Partitions
-BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
+BOARD_FLASH_BLOCK_SIZE := 4096 # (BOARD_KERNEL_PAGESIZE * 64)
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_HAS_LARGE_FILESYSTEM := true
@@ -121,10 +127,10 @@ BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_COPY_OUT_VENDOR := vendor
-BOARD_SUPER_PARTITION_SIZE := 9126805504
+BOARD_SUPER_PARTITION_SIZE := 9663676416
 BOARD_SUPER_PARTITION_GROUPS := nothing_dynamic_partitions
 BOARD_NOTHING_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext vendor product odm vendor_dlkm odm_dlkm
-BOARD_NOTHING_DYNAMIC_PARTITIONS_SIZE := 9122611200
+BOARD_NOTHING_DYNAMIC_PARTITIONS_SIZE := 9659482112
 
 # Properties
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
@@ -176,7 +182,7 @@ TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
 TW_LOAD_VENDOR_MODULES := $(shell echo \"$(shell ls $(DEVICE_PATH)/recovery/root/vendor/lib/modules)\")
 
 # maintainer
-TW_DEVICE_VERSION := galaxian-KSN-Crazy_joker67
+TW_DEVICE_VERSION := Galaxian-KSN-Crazy_joker67
 
 # Vendor_boot recovery ramdisk
 BOARD_USES_RECOVERY_AS_BOOT := false

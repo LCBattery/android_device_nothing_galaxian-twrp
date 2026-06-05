@@ -1,4 +1,4 @@
-FDEVICE="galaxian"
+FDEVICE="Galaxian"
 #set -o xtrace
 
 fox_get_target_device() {
@@ -24,14 +24,14 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_USE_DATA_RECOVERY_FOR_SETTINGS=1
 	export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
 	export OF_NO_MIUI_PATCH_WARNING=1
-	export OF_VANILLA_BUILD=0
+	export OF_VANILLA_BUILD=1
 
 	# Device Specifics
         export TARGET_DEVICE_ALT="A001T"
 	export FOX_AB_DEVICE=1
 
 	# Lights
-	export OF_FLASHLIGHT_ENABLE=0
+	export OF_FLASHLIGHT_ENABLE=1
 	export OF_USE_GREEN_LED=0
 
 	# Display
