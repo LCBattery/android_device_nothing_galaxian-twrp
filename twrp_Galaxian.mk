@@ -7,7 +7,7 @@ PRODUCT_MANUFACTURER := Nothing
 PRODUCT_RELEASE_NAME := Nothing Phone (3a) Lite
 
 # Device specific configs
-$(call inherit-product, device/nothing/galaxian/device.mk)
+$(call inherit-product, device/nothing/Galaxian/device.mk)
 
 # Configure virtual_ab_ota.mk
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
